@@ -5,11 +5,6 @@ xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
-	<login-config>
-		<auth-method>BASIC</auth-method>
-		
-	</login-config>
-
 	<filter>
 		<filter-name>Authenticator</filter-name>
 		<filter-class>eu.doniec.piotr.naspotkanie.web.AuthFilter</filter-class>

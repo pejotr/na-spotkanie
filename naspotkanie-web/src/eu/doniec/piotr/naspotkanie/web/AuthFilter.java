@@ -1,10 +1,19 @@
 package eu.doniec.piotr.naspotkanie.web;
 
 import java.io.IOException;
-import java.util.Enumeration;
+import java.util.StringTokenizer;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.codec.binary.Base64;
+import org.datanucleus.util.StringUtils;
 
 public class AuthFilter implements Filter {
 
@@ -20,36 +29,28 @@ public class AuthFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpServletResponse res = (HttpServletResponse)response;
 
-		String authType = req.getAuthType();
-		
-		Enumeration names = req.getHeaderNames();
-	    while (names.hasMoreElements()) {
-	      String name = (String) names.nextElement();
-	      Enumeration values = req.getHeaders(name); // support multiple values
-	      if (values != null) {
-	        while (values.hasMoreElements()) {
-	          String value = (String) values.nextElement();
-	          System.out.println(name + ": " + value);
-	        }
-	      }
-	    }
-		
-		System.out.println("authtype " + authType);
-		
-		if( authType != null && authType.equals(HttpServletRequest.BASIC_AUTH) ) {
-			String authHeader = req.getHeader("Authorization");
-			String authParts[] = authHeader.split(":");
+		final String authHeader = req.getHeader( "Authorization" );
+				
+		if( authHeader != null ) {
+			StringTokenizer st = new StringTokenizer(authHeader);
 			
-			if( authParts[0].equals("admin") && authParts[1].equals("pass") ) {
-				chain.doFilter(request, response);
-			} else {
-				res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-				return;				
-			}
-		} else {
-			res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-			return;
+			if(st.hasMoreTokens()) {
+				String basicAuth = st.nextToken();
+				
+				if(basicAuth.equalsIgnoreCase(HttpServletRequest.BASIC_AUTH)) {
+					byte[] authData = Base64.decodeBase64(st.nextToken());
+					final String[] credentials = StringUtils.split(new String(authData), ":");
+					
+					if(credentials.length == 2 && credentials[0].equals("admin") && credentials[1].equals("mypass") ) {
+						chain.doFilter(request, response);
+						return;
+					}
+				}	
+			}	
 		}
+		
+		res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+		return;
 		
 	}
 
