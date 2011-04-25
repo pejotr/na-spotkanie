@@ -8,8 +8,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<filter>
 		<filter-name>Authenticator</filter-name>
 		<filter-class>eu.doniec.piotr.naspotkanie.web.AuthFilter</filter-class>
-	</filter>
-	
+	</filter>	
 	<filter-mapping>
 		<filter-name>Authenticator</filter-name>
 		<servlet-name>PositionLog</servlet-name>

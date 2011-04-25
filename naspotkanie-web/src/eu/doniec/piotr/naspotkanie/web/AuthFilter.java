@@ -29,6 +29,8 @@ public class AuthFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest)request;
 		HttpServletResponse res = (HttpServletResponse)response;
 
+		System.out.println("Access attemp");
+		
 		final String authHeader = req.getHeader( "Authorization" );
 				
 		if( authHeader != null ) {
@@ -43,6 +45,7 @@ public class AuthFilter implements Filter {
 					
 					if(credentials.length == 2 && credentials[0].equals("admin") && credentials[1].equals("mypass") ) {
 						chain.doFilter(request, response);
+						System.out.println("Authentication successful");
 						return;
 					}
 				}	
