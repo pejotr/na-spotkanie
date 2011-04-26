@@ -6,7 +6,9 @@ import eu.doniec.piotr.naspotkanie.mobile.util.*;
 
 public class NaSpotkanieApplication extends Application {
 	
-	public static final String APPTAG = "NaSpotkanie"; 
+	public static final String APPTAG = "NaSpotkanie";
+	public static final String PREFS  = "NaSpotkaniePrefs";
+	
 	protected HttpAuthorizedRequest mHttpAuthorizedRequest;
 	
 

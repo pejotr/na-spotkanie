@@ -2,4 +2,9 @@
 <resources>
     <string name="hello">Hello World!</string>
     <string name="app_name">NaSpotkanie</string>
+    
+    <string name="strEmail">E-mail</string>
+    <string name="strPassword">Password</string>
+    <string name="strSignin">Sign in</string>
+    
 </resources>
