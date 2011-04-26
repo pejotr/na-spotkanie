@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpPost;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,13 +47,20 @@ public class AuthActivity extends Activity {
 				Log.i(NaSpotkanieApplication.APPTAG, 
 						"Starting auth task [#username=" + username + ";#password[" + password +"]]");
 			
-				new AuthTask().execute(AuthActivity.this);
+				new AuthTask(AuthActivity.this).execute();
 			}
 		});
 	}
 	
-	protected class AuthTask extends AsyncTask<AuthActivity, Void, Integer> {
-				
+	protected class AuthTask extends AsyncTask<Void, Void, Integer> {
+		
+		protected Activity mContext;
+		
+		public AuthTask(Activity ctx) {
+			super();
+			this.mContext = ctx;
+		}
+		
 		@Override
 		protected void onPreExecute() {
 			mAuthProgess = ProgressDialog.show(AuthActivity.this, "Authenticating...", 
@@ -60,11 +68,9 @@ public class AuthActivity extends Activity {
 		}
 
 		@Override
-		protected Integer doInBackground(AuthActivity... params) {
+		protected Integer doInBackground(Void... params) {
 			
-			AuthActivity context = (AuthActivity)params[0];
-			
-			HttpAuthorizedRequest req = ((NaSpotkanieApplication)context.getApplication()).getHttAuthorizedRequest();
+			HttpAuthorizedRequest req = ((NaSpotkanieApplication)mContext.getApplication()).getHttAuthorizedRequest();
 			HttpPost post = new HttpPost("/PositionLog");
 			HttpEntity entity;
 			try {
@@ -92,6 +98,7 @@ public class AuthActivity extends Activity {
 				case HttpAuthorizedRequest.HTTP_OK:
 					Toast.makeText(AuthActivity.this.getApplicationContext(), 
 							"Authorization OK", Toast.LENGTH_SHORT).show();
+					startActivity(new Intent(mContext, eu.doniec.piotr.naspotkanie.mobile.MainActivity.class) );
 					break;
 				default:
 					Toast.makeText(AuthActivity.this.getApplicationContext(), 
@@ -99,7 +106,6 @@ public class AuthActivity extends Activity {
 					break;
 			}
 
-		}
-		
+		}		
 	}	
 }
