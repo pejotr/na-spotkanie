@@ -29,6 +29,10 @@ import android.util.Log;
 
 public class HttpAuthorizedRequest {
 	
+	public static final int HTTP_UNAUTHORIZED = 401;
+	public static final int HTTP_OK = 200;
+	public static final int HTTP_NOTIMPLEMENTED = 501;
+	
 	protected DefaultHttpClient mHttpClient = new DefaultHttpClient();
 	protected HttpHost mTargetHost;
 	protected BasicHttpContext mContext; 
@@ -58,7 +62,7 @@ public class HttpAuthorizedRequest {
 			throws ClientProtocolException, IOException, HttpException {
 		HttpResponse resp = mHttpClient.execute(mTargetHost, httppost, mContext);
 		
-		if( resp.getStatusLine().getStatusCode() == 401 ) {
+		if( resp.getStatusLine().getStatusCode() == HTTP_UNAUTHORIZED) {
 			Log.w(NaSpotkanieApplication.APPTAG, "Request rejected - error 401");
 			throw new HttpException("Unauthorized request !!!");
 		}
