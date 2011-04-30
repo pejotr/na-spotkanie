@@ -5,8 +5,7 @@ import org.apache.http.HttpHost;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-
-import eu.doniec.piotr.naspotkanie.mobile.util.*;
+import eu.doniec.piotr.naspotkanie.mobile.util.HttpAuthorizedRequest;
 
 public class IndexActivity extends Activity {
 

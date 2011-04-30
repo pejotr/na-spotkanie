@@ -55,6 +55,7 @@ public class AuthActivity extends Activity {
 	protected class AuthTask extends AsyncTask<Void, Void, Integer> {
 		
 		protected Activity mContext;
+		public static final int NO_NETWORK = 1001;
 		
 		public AuthTask(Activity ctx) {
 			super();
@@ -69,6 +70,12 @@ public class AuthActivity extends Activity {
 
 		@Override
 		protected Integer doInBackground(Void... params) {
+			
+			boolean isOnline = ((NaSpotkanieApplication)mContext.getApplication()).isOnline(); 
+			
+			if( !isOnline ) {
+				return AuthTask.NO_NETWORK;
+			}
 			
 			HttpAuthorizedRequest req = ((NaSpotkanieApplication)mContext.getApplication()).getHttAuthorizedRequest();
 			HttpPost post = new HttpPost("/PositionLog");
@@ -95,6 +102,11 @@ public class AuthActivity extends Activity {
 			mAuthProgess.dismiss();
 			
 			switch(code) {
+				case AuthTask.NO_NETWORK:
+					Toast.makeText(AuthActivity.this.getApplicationContext(), 
+							"Cannot connect to server - please turn on network", Toast.LENGTH_LONG).show();
+					break;
+			
 				case HttpAuthorizedRequest.HTTP_OK:
 					Toast.makeText(AuthActivity.this.getApplicationContext(), 
 							"Authorization OK", Toast.LENGTH_SHORT).show();

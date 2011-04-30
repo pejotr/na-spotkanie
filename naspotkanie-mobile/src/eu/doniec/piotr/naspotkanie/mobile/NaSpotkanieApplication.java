@@ -1,8 +1,10 @@
 package eu.doniec.piotr.naspotkanie.mobile;
 
 import android.app.Application;
-
-import eu.doniec.piotr.naspotkanie.mobile.util.*;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import eu.doniec.piotr.naspotkanie.mobile.util.HttpAuthorizedRequest;
 
 public class NaSpotkanieApplication extends Application {
 	
@@ -18,6 +20,17 @@ public class NaSpotkanieApplication extends Application {
 	
 	public HttpAuthorizedRequest getHttAuthorizedRequest() {
 		return mHttpAuthorizedRequest;
+	}
+	
+	public boolean isOnline() {
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+	    if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+	        return true;
+	    }
+	    return false;
+
 	}
 	
 }

@@ -23,9 +23,8 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 
-import eu.doniec.piotr.naspotkanie.mobile.NaSpotkanieApplication;
-
 import android.util.Log;
+import eu.doniec.piotr.naspotkanie.mobile.NaSpotkanieApplication;
 
 public class HttpAuthorizedRequest {
 	
