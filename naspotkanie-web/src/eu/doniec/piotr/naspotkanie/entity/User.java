@@ -18,9 +18,9 @@ public class User {
 	private String passwordHash;
 	private Date registered;
 	
-	public User(String email, Date registered) {
+	public User(String email, String password) {
 		this.email = email;
-		this.registered = registered;
+		this.passwordHash = password;
 	}
 	
 	public Long getId() {

@@ -30,6 +30,7 @@ public class HttpAuthorizedRequest {
 	
 	public static final int HTTP_UNAUTHORIZED = 401;
 	public static final int HTTP_OK = 200;
+	public static final int HTTP_NOTFOUND = 404;
 	public static final int HTTP_NOTIMPLEMENTED = 501;
 	
 	protected DefaultHttpClient mHttpClient = new DefaultHttpClient();
@@ -57,6 +58,30 @@ public class HttpAuthorizedRequest {
 		
 	}
 	
+	public HttpHost getTargetHost() {
+		return mTargetHost;
+	}
+
+	public void setTargetHost(HttpHost mTargetHost) {
+		this.mTargetHost = mTargetHost;
+	}
+
+	public String getUsername() {
+		return mUsername;
+	}
+
+	public void setUsername(String mUsername) {
+		this.mUsername = mUsername;
+	}
+
+	public String getPassword() {
+		return mPassword;
+	}
+
+	public void setPassword(String mPassword) {
+		this.mPassword = mPassword;
+	}
+
 	public HttpEntity makeRequest(HttpPost httppost) 
 			throws ClientProtocolException, IOException, HttpException {
 		HttpResponse resp = mHttpClient.execute(mTargetHost, httppost, mContext);

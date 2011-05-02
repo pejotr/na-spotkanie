@@ -3,66 +3,35 @@ package eu.doniec.piotr.naspotkanie.mobile;
 import java.util.ArrayList;
 
 import android.app.ListActivity;
-import android.database.Cursor;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.ListView;
+import eu.doniec.piotr.naspotkanie.mobile.util.Calendar;
+import eu.doniec.piotr.naspotkanie.mobile.view.MettingsListAdapter;
 
 public class MeetingsListActivity extends ListActivity {
 
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
-		//setContentView(R.layout.meetings);
-		
-		/*
-		String[] names = new String[] { "Linux", "Windows7", "Eclipse", "Suse",
-				"Ubuntu", "Solaris", "Android", "iPhone"};
-		*/
 
-		/*
-		this.setListAdapter(new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, names));
-		*/
-
-		/*
-		// Events retriving
-		String[] projection = new String[] {"_id", "title"};
-		Uri uri = Uri.parse("content://com.android.calendar/events");
-		Cursor cursor =  getContentResolver().query(uri, projection, null, null, null);
-		*/
+		ArrayList<Calendar.Event> events = Calendar.Event.getAllEvents(getContentResolver());
+		this.setListAdapter(new MettingsListAdapter(this, R.layout.naspotkanie_image_2_rows, events));
 		
-		String[] projection = new String[] {"attendeeName", "attendeeEmail"};
-		Uri uri = Uri.parse("content://com.android.calendar/attendees");
-		Cursor cursor =  getContentResolver().query(uri, projection, null, null, null);
+	}
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
 		
-		ArrayList<String> cosik = new ArrayList<String>();
+		Calendar.Event e = (Calendar.Event)this.getListAdapter().getItem(position);
 		
-		if (cursor != null && cursor.getCount() > 0) {
-			cursor.moveToFirst();
-			String columnNames[] = cursor.getColumnNames();
-			String value = "";
-			
-			do {
-				value = "";
-
-				for (String colName : columnNames) {
-					value += colName + " = ";
-					value += cursor.getString(cursor.getColumnIndex(colName))
-			       + " ||";
-				}
-
-				Log.i("INFO : ", value);
-				cosik.add(value);
-			} while (cursor.moveToNext());
-
-		}
+		Intent i = new Intent(this, eu.doniec.piotr.naspotkanie.mobile.MeetingDetailsActivity.class); 
+		i.putExtra("event_id", e.getId());
 		
-		String[] calendars = new String[cosik.size()];
-		cosik.toArray(calendars);
-		this.setListAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, calendars ));
-		
+		startActivity(i);	
 	}
 	
 }

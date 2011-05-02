@@ -22,6 +22,24 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<servlet-name>PositionLog</servlet-name>
 		<url-pattern>/PositionLog</url-pattern>
 	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>AuthRegister</servlet-name>
+		<servlet-class>eu.doniec.piotr.naspotkanie.web.AuthRegisterServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AuthRegister</servlet-name>
+		<url-pattern>/AuthRegister</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
+		<servlet-name>DbgList</servlet-name>
+		<servlet-class>eu.doniec.piotr.naspotkanie.web.dbg.ListUsersServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DbgList</servlet-name>
+		<url-pattern>/DbgList</url-pattern>
+	</servlet-mapping>
 
 	<servlet>
 		<servlet-name>NoInvoker</servlet-name>

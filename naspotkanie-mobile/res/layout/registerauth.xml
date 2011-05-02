@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+>
+  
+	<ImageView android:id="@+id/appicon"
+		android:src="@drawable/header"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+
+	<TextView android:id="@+id/tvEmail"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/strEmail" />
+	<EditText android:id="@+id/etEmail"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content" />
+
+	<TextView android:id="@+id/tvPassword"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/strPassword" />
+	<EditText android:id="@+id/etPassword"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:inputType="textPassword" />
+ 	
+	<Button android:id="@+id/btnSubmit"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:text="@string/strSignin" />
+  
+</LinearLayout>
