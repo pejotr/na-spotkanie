@@ -17,7 +17,25 @@ public class User {
 	private String email;
 	private String passwordHash;
 	private Date registered;
+	private float longitude;
+	private float latitude;
 	
+	public float getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(float longitude) {
+		this.longitude = longitude;
+	}
+
+	public float getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(float latitude) {
+		this.latitude = latitude;
+	}
+
 	public User(String email, String password) {
 		this.email = email;
 		this.passwordHash = password;
