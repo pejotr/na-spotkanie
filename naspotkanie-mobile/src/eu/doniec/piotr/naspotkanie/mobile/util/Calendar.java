@@ -16,6 +16,7 @@ public class Calendar {
 		protected String 	mTitle;
 		protected String	mDescription;
 		protected int		mAttendeesCnt;
+		protected long 		mDateStart;
 
 		public int getId() {
 			return mId;
@@ -49,18 +50,46 @@ public class Calendar {
 			this.mAttendeesCnt = mAttendeesCnt;
 		}
 
+		public long getDateStart() {
+			return mDateStart;
+		}
+
+		public void setDateStart(long mDateStart) {
+			this.mDateStart = mDateStart;
+		}
+
 		public static ArrayList<Event> getAllEvents(ContentResolver resolver) {
 			
-			ArrayList<Event> events = new ArrayList<Event>();
-			String[] projection = new String[] {"_id","title", "description"};
+			return getEvent(resolver, null, null);
 			
-			Cursor cursor =  resolver.query(Calendar.Event.CONTENT_URI, projection, null, null, null);
+		}
+		
+		public static Event getEvent(ContentResolver resolver, int eventId) {
+			
+			String selection = "_id = ?";
+			String selectionArgs[] = { Integer.toString(eventId) };
+			
+			ArrayList<Calendar.Event> events = getEvent(resolver, selection, selectionArgs);
+			
+			if(events.size() != 1) {
+				return null;
+			}
+			
+			return events.get(0);
+		
+		}
+		
+		public static ArrayList<Event> getEvent(ContentResolver resolver, String selection, String[] selectionArgs) {
+			ArrayList<Calendar.Event> events = new ArrayList<Calendar.Event>();
+			String[] projection = new String[] {"_id","title", "description", "dtstart"};			
+			Cursor cursor =  resolver.query(Calendar.Event.CONTENT_URI, projection, selection, selectionArgs, null);
 			
 			if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
 				
 				int idCol = cursor.getColumnIndex("_id");
 				int titleCol = cursor.getColumnIndex("title");
 				int descCol = cursor.getColumnIndex("description");
+				int dtstartCol = cursor.getColumnIndex("dtstart");
 				
 				do {
 					
@@ -70,14 +99,13 @@ public class Calendar {
 					e.setTitle(cursor.getString(titleCol));
 					e.setDescription(cursor.getString(descCol));
 					e.setAttendeesCnt(Calendar.Attendee.getCount(resolver, cursor.getInt(idCol)));
-					
+					e.setDateStart(cursor.getLong(dtstartCol));
 					events.add(e);
 					
 				} while(cursor.moveToNext());
 			}
 			
-			return events;
-			
+			return events;			
 		}
 		
 	}

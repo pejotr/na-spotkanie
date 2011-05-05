@@ -7,4 +7,8 @@
     <string name="strPassword">Password</string>
     <string name="strSignin">Sign in</string>
     
+    <string name="str_event_start">Event start:</string>
+    <string name="str_allow_on">Enable position sharing</string>
+    
+ 
 </resources>

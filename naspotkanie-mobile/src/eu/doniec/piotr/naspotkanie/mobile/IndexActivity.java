@@ -19,19 +19,19 @@ public class IndexActivity extends Activity {
 		((NaSpotkanieApplication) this.getApplication()).setHttpAuthorizedRequest(
 				new HttpAuthorizedRequest(new HttpHost("192.168.10.153", 8888), "test", "test"));
 		
-		SharedPreferences settings = getSharedPreferences(NaSpotkanieApplication.PREFS, Context.MODE_PRIVATE);
-		String username = settings.getString("username", "");
-		String password = settings.getString("password", "");
+		//SharedPreferences settings = getSharedPreferences(NaSpotkanieApplication.PREFS, Context.MODE_PRIVATE);
+		//String username = settings.getString("username", "");
+		//String password = settings.getString("password", "");
 		
 		//if( username.equals("") || password.equals("") ) {
-			Log.i(NaSpotkanieApplication.APPTAG, "Credentials han not been found");
+		//	Log.i(NaSpotkanieApplication.APPTAG, "Credentials han not been found");
 			// jesli nie ma ustawionego zadnego konta dla aplikacji to:
-			startActivity(new Intent(this, eu.doniec.piotr.naspotkanie.mobile.AuthActivity.class) );	
+		//	startActivity(new Intent(this, eu.doniec.piotr.naspotkanie.mobile.AuthActivity.class) );	
 		//} else {
 		//	Log.i(NaSpotkanieApplication.APPTAG, 
 		//			"Read credentials [#username=" + username + ";#password[" + password +"]]");
 			// prztestuj polaczenie - jesli fail odpalic AuthActivity
-		//	startActivity(new Intent(this, eu.doniec.piotr.naspotkanie.mobile.MainActivity.class) );
+			startActivity(new Intent(this, eu.doniec.piotr.naspotkanie.mobile.MainActivity.class) );
 		//}
 	}	
 }
