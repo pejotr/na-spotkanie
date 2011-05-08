@@ -3,11 +3,8 @@ package eu.doniec.piotr.naspotkanie.mobile;
 import org.apache.http.HttpHost;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import eu.doniec.piotr.naspotkanie.mobile.util.HttpAuthorizedRequest;
 
 public class IndexActivity extends Activity {
