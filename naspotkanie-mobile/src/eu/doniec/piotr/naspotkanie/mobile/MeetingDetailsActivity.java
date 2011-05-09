@@ -102,10 +102,8 @@ public class MeetingDetailsActivity extends Activity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
+		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.meeting_details);
-
 
 		mEventStartDatetimeValue = (TextView)findViewById(R.id.event_start_datetime_value);
 		mAllowLogging			 = (CheckBox)findViewById(R.id.allow_logging);
@@ -121,19 +119,19 @@ public class MeetingDetailsActivity extends Activity {
 		mAllowLogging.setOnClickListener(new View.OnClickListener() {
 			
 			public void onClick(View v) {
+				
 				if(((CheckBox)mAllowLogging).isChecked()) {
 					mChooseLoggingStartDate.setEnabled(true);
 					mChooseLoggingStartTime.setEnabled(true);
 					mChooseLoggingEndDate.setEnabled(true);
 					mChooseLoggingEndTime.setEnabled(true);
-					
-					
 				} else {
 					mChooseLoggingStartDate.setEnabled(false);
 					mChooseLoggingStartTime.setEnabled(false);
 					mChooseLoggingEndDate.setEnabled(false);
 					mChooseLoggingEndTime.setEnabled(false);
 				}
+				
 			}
 		});
 		
@@ -226,7 +224,6 @@ public class MeetingDetailsActivity extends Activity {
 	}
 	
 	private void prepareUI() {
-		
 		Time t = new Time();
 		t.set(Calendar.Event.getEvent(getContentResolver(), mEventId).getDateStart());
 		mEventStartDatetimeValue.setText(t.format("%d/%m/%Y %H:%M"));
