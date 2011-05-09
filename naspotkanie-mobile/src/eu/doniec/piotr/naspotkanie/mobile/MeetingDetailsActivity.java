@@ -20,7 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import eu.doniec.piotr.naspotkanie.mobile.service.LoggingService;
+import eu.doniec.piotr.naspotkanie.mobile.service.TrackingService;
 import eu.doniec.piotr.naspotkanie.mobile.util.AlarmTable;
 import eu.doniec.piotr.naspotkanie.mobile.util.Calendar;
 
@@ -193,7 +193,7 @@ public class MeetingDetailsActivity extends Activity {
         tbl.update(mEventId, fromTimestamp, toTimestamp, 1);
         tbl.close();
 		
-		Intent i = new Intent(MeetingDetailsActivity.this, LoggingService.class);
+		Intent i = new Intent(MeetingDetailsActivity.this, TrackingService.class);
 		PendingIntent pi = PendingIntent.getService(MeetingDetailsActivity.this, 0, i, 0);
 		AlarmManager manager = (AlarmManager)getSystemService(ALARM_SERVICE);       
         
@@ -229,7 +229,7 @@ public class MeetingDetailsActivity extends Activity {
 		
 		Time t = new Time();
 		t.set(Calendar.Event.getEvent(getContentResolver(), mEventId).getDateStart());
-		mEventStartDatetimeValue.setText(t.format("%d/%m/%Y %H:%M:%S"));
+		mEventStartDatetimeValue.setText(t.format("%d/%m/%Y %H:%M"));
 		
 		ArrayList<Calendar.Attendee> attendees =  Calendar.Attendee.getAll(getContentResolver(), mEventId);
 		ArrayList<String> attendeesNames  = new ArrayList<String>();
