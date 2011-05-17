@@ -3,15 +3,20 @@
       package="eu.doniec.piotr.naspotkanie.mobile"
       android:versionCode="1"
       android:versionName="1.0">
+
     <uses-sdk android:minSdkVersion="8" />
-    
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CALENDAR" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     
-    <application android:name="NaSpotkanieApplication" android:icon="@drawable/icon" android:label="@string/app_name">
+    <application 
+    	android:name="NaSpotkanieApplication" 
+    	android:icon="@drawable/icon" 
+    	android:label="@string/app_name"
+    	android:theme="@style/Theme.NaSpotkanie">
+    	
         <uses-library android:name="com.google.android.maps" />
 		<activity android:name=".IndexActivity">
 			<intent-filter>
@@ -25,6 +30,7 @@
 		<activity android:name=".SettingsActivity" 		 />
 		<activity android:name=".MeetingsListActivity" 	 />
 		<activity android:name=".MeetingDetailsActivity" />
+		<activity android:name=".MeetingMapActivity" 	 />
 		<service android:name="eu.doniec.piotr.naspotkanie.mobile.service.TrackingService" />
     </application>
 </manifest>

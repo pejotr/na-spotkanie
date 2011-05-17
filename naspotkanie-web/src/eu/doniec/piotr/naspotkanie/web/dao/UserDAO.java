@@ -45,6 +45,23 @@ public class UserDAO {
 		return user;
 	}
 	
+	public void setUserPosition(double lgt, double lat, long id) {
+		EntityManager em = EMFService.get().createEntityManager();
+		
+		try {
+			Query q = em.createQuery("select u from User u where u.id = " + id + "");
+			User user = (User)q.getSingleResult();			
+			
+			user.setLatitude(lat);
+			user.setLongitude(lgt);
+			
+			em.merge(user);
+			
+		} finally {
+			em.close();
+		}
+	}
+	
 	public List<User> getAllUsers() {
 		EntityManager em = EMFService.get().createEntityManager();
 

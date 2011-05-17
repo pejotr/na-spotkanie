@@ -93,6 +93,10 @@ public class Calendar {
 				
 				do {
 					
+					if(Attendee.getCount(resolver, cursor.getInt(idCol)) <= 1) {
+						continue;
+					}
+					
 					Calendar.Event e = new Calendar.Event();
 					
 					e.setId(cursor.getInt(idCol));

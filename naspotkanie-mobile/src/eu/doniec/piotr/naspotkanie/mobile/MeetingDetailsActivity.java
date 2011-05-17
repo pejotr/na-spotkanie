@@ -1,14 +1,21 @@
 package eu.doniec.piotr.naspotkanie.mobile;
 
+import eu.doniec.piotr.naspotkanie.mobile.service.TrackingService;
+import eu.doniec.piotr.naspotkanie.mobile.util.AlarmTable;
+import eu.doniec.piotr.naspotkanie.mobile.util.Calendar;
+import greendroid.app.GDActivity;
+import greendroid.widget.ActionBarItem;
+import greendroid.widget.ActionBarItem.Type;
+
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.text.format.Time;
 import android.view.View;
@@ -20,11 +27,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
-import eu.doniec.piotr.naspotkanie.mobile.service.TrackingService;
-import eu.doniec.piotr.naspotkanie.mobile.util.AlarmTable;
-import eu.doniec.piotr.naspotkanie.mobile.util.Calendar;
 
-public class MeetingDetailsActivity extends Activity {
+public class MeetingDetailsActivity extends GDActivity {
 
 	static final int DATE_FROM_DIALOG_ID = 000;
 	static final int TIME_FROM_DIALOG_ID = 001;
@@ -102,8 +106,12 @@ public class MeetingDetailsActivity extends Activity {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);		
-		setContentView(R.layout.meeting_details);
+		super.onCreate(savedInstanceState);
+		setActionBarContentView(R.layout.activity_meeting_details);
+		addActionBarItem(Type.Locate, R.id.action_bar_map);
+		addActionBarItem(Type.Refresh, R.id.action_bar_refresh);
+		addActionBarItem(Type.Share, R.id.action_bar_save);
+		//setContentView(R.layout.meeting_details);
 
 		mEventStartDatetimeValue = (TextView)findViewById(R.id.event_start_datetime_value);
 		mAllowLogging			 = (CheckBox)findViewById(R.id.allow_logging);
@@ -159,45 +167,93 @@ public class MeetingDetailsActivity extends Activity {
 			}
 		});
 		
-		final java.util.Calendar c = java.util.Calendar.getInstance();
-		mToDay   = mFromDay   = c.get(java.util.Calendar.DAY_OF_MONTH);
-		mToMonth = mFromMonth = c.get(java.util.Calendar.MONTH);
-		mToYear  = mFromYear  = c.get(java.util.Calendar.YEAR);
+		AlarmTable tbl = new AlarmTable(this);
+		Cursor crs = tbl.getById(mEventId);
 		
-		final Time t = new Time();
-		t.setToNow();
-		mToHours   = mFromHours   = t.hour;
-		mToMinutes = mFromMinutes = t.minute;
+		if( crs != null && crs.getCount() == 1 && crs.moveToFirst() ) {
+			int startCol	 = crs.getColumnIndex("start");
+			int stopCol	 = crs.getColumnIndex("stop");
+			int validCol = crs.getColumnIndex("valid");		
+			Time startTimestamp = new Time();
+			Time stopTimestamp = new Time();
+			int isValid = 0;
+			
+			isValid = crs.getInt(validCol);
+			startTimestamp.set(crs.getLong(startCol) * 1000);
+			stopTimestamp.set(crs.getLong(stopCol) * 1000);
+			
+			if( isValid == 0) {
+				resetTime();
+			} else {
+				mFromDay	 = startTimestamp.monthDay;
+				mFromMonth	 = startTimestamp.month;
+				mFromYear	 = startTimestamp.year;
+				mFromHours   = startTimestamp.hour;
+				mFromMinutes = startTimestamp.minute;
+				
+				mToDay		= stopTimestamp.monthDay;
+				mToMonth	= stopTimestamp.month;
+				mToYear		= stopTimestamp.year;
+				mToHours 	= stopTimestamp.hour;
+				mToMinutes 	= stopTimestamp.minute;
+				
+				mAllowLogging.setChecked(true);
+				
+				mChooseLoggingStartDate.setEnabled(true);
+				mChooseLoggingStartTime.setEnabled(true);
+				mChooseLoggingEndDate.setEnabled(true);
+				mChooseLoggingEndTime.setEnabled(true);
+			}
+		} else {
+			resetTime();
+		}
+		
+		crs.close();
+		tbl.close();
 		
 		prepareUI();
 	}
 	
 	@Override
-	protected void onPause() {
-		super.onPause();
+    public boolean onHandleActionBarItemClick(ActionBarItem item, int position) {
 		
-		Toast.makeText(MeetingDetailsActivity.this, "TEST", Toast.LENGTH_SHORT).show();
+        switch (item.getItemId()) {
+	        case R.id.action_bar_map:
+	            startActivity(new Intent(this, MeetingMapActivity.class));
+	        	//Toast.makeText(this, "MAP", Toast.LENGTH_SHORT).show();
+	            break;
+	
+	        case R.id.action_bar_refresh:
+	            Toast.makeText(this, "REFRESH", Toast.LENGTH_SHORT).show();
+	            break;
+	
+	        case R.id.action_bar_save:
+	        	java.util.Calendar calendar = java.util.Calendar.getInstance(); 		
+	    		calendar.set(mFromYear, mFromMonth, mFromDay, mFromHours, mFromMinutes, 0);
+	    		long fromTimestamp = calendar.getTimeInMillis() / 1000;
+	    		
+	    		calendar.set(mToYear, mToMonth, mToDay, mToHours, mToMinutes, 0);
+	    		long toTimestamp = calendar.getTimeInMillis() / 1000;
 
-		java.util.Calendar calendar = java.util.Calendar.getInstance();
-		
-		calendar.set(mFromYear, mFromMonth, mFromDay, mFromHours, mFromMinutes, 0);
-		long fromTimestamp = calendar.getTimeInMillis() / 1000;
-		
-		calendar.set(mToYear, mToMonth, mToDay, mToHours, mToMinutes, 0);
-		long toTimestamp = calendar.getTimeInMillis() / 1000;
-		
+	            AlarmTable tbl = new AlarmTable(this);
+	            tbl.update(mEventId, fromTimestamp, toTimestamp, (mAllowLogging.isChecked()) ? 1 : 0);
+	            tbl.close();
+	    		
+	    		Intent i = new Intent(MeetingDetailsActivity.this, TrackingService.class);
+	    		PendingIntent pi = PendingIntent.getService(MeetingDetailsActivity.this, 0, i, 0);
+	    		AlarmManager manager = (AlarmManager)getSystemService(ALARM_SERVICE);       
+	            
+	            manager.set(AlarmManager.RTC, fromTimestamp*1000, pi);
+	            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+	            break;
+	
+	        default:
+	            return super.onHandleActionBarItemClick(item, position);
+        }
 
-        AlarmTable tbl = new AlarmTable(this);
-        tbl.update(mEventId, fromTimestamp, toTimestamp, 1);
-        tbl.close();
-		
-		Intent i = new Intent(MeetingDetailsActivity.this, TrackingService.class);
-		PendingIntent pi = PendingIntent.getService(MeetingDetailsActivity.this, 0, i, 0);
-		AlarmManager manager = (AlarmManager)getSystemService(ALARM_SERVICE);       
-        
-        manager.set(AlarmManager.RTC, fromTimestamp*1000, pi);
-		
+        return true;
 	}
+	
 
 	@Override
 	protected Dialog onCreateDialog(int id) {
@@ -250,5 +306,18 @@ public class MeetingDetailsActivity extends Activity {
 		t.set(0, mToMinutes, mToHours, mToDay, mToMonth, mToYear);
 		mChooseLoggingEndDate.setText(t.format("%d/%m/%Y"));
 		mChooseLoggingEndTime.setText(t.format("%H:%M"));
-	}	
+	}
+	
+	private void resetTime() {
+		final java.util.Calendar c = java.util.Calendar.getInstance();
+		mToDay   = mFromDay   = c.get(java.util.Calendar.DAY_OF_MONTH);
+		mToMonth = mFromMonth = c.get(java.util.Calendar.MONTH);
+		mToYear  = mFromYear  = c.get(java.util.Calendar.YEAR);
+		
+		final Time t = new Time();
+		t.setToNow();
+		mToHours   = mFromHours   = t.hour;
+		mToMinutes = mFromMinutes = t.minute;
+	}
+	 
 }

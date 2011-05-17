@@ -57,13 +57,17 @@ public class AlarmTable {
 	}
 	
 	public Cursor getAll() {
-		
 		String[] columns = new String[] { "id", "start", "stop", "valid" };
-		
-		
+				
 		Cursor c = mDBHelper.getReadableDatabase().query(ALARMS_TABLE_NAME, columns, null, null, null, null, null);
 		return c;
+	}
+	
+	public Cursor getById(int id) {
+		String[] columns = new String[] { "id", "start", "stop", "valid" };
 		
+		Cursor c = mDBHelper.getReadableDatabase().query(ALARMS_TABLE_NAME, columns, "id = ?", new String[] { Integer.toString(id) }, null, null, null);
+		return c;
 	}
 	
 	public void close() {

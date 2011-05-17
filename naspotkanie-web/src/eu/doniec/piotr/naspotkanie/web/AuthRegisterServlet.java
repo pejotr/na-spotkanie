@@ -50,14 +50,17 @@ public class AuthRegisterServlet extends HttpServlet {
 			if( !registered ) {
 				System.out.println("[INFO] Trying to register user [#email=" + email + " #password="+ password +"]");
 				dao.registerUser(email, password);
+				User u = dao.getUser(email);
 				
+				r.userId = u.getId();
 				r.statusCode = 200;
 				r.statusMessage = "New account has been created";
 			} else {
 				
 				User u = dao.getUser(email);
 				
-				if( u.getPasswordHash() == password) {
+				if( u.getPasswordHash().equals(password) ) {
+					r.userId = u.getId();
 					r.statusCode = 200;
 					r.statusMessage = "Authentication successful";
 				} else {
@@ -77,6 +80,7 @@ public class AuthRegisterServlet extends HttpServlet {
 	}
 	
 	class AuthRegisterResponse {
+		public long userId;
 		public int statusCode;
 		public String statusMessage;
 	}

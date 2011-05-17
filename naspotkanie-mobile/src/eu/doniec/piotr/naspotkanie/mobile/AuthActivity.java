@@ -59,6 +59,7 @@ public class AuthActivity extends Activity {
 	
 	
 	class AuthRegisterResponse {
+		public long userId;
 		public int statusCode;
 		public String statusMessage;
 	}
@@ -138,8 +139,10 @@ public class AuthActivity extends Activity {
 					
 					editor.putString("username", req.getUsername());
 					editor.putString("password", req.getPassword());
+					editor.putLong("id", response.userId);
+					
 					Log.i(NaSpotkanieApplication.APPTAG, 
-							"Storing credentials [#username=" + req.getUsername() + ";#password[" + req.getPassword() +"]]");
+							"Storing credentials [#username<" + req.getUsername() + "> #password<" + req.getPassword() +"> #id<" + response.userId + ">]");
 					editor.commit();
 					
 					startActivity(new Intent(mContext, eu.doniec.piotr.naspotkanie.mobile.MainActivity.class) );

@@ -11,7 +11,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import eu.doniec.piotr.naspotkanie.entity.User;
 import eu.doniec.piotr.naspotkanie.util.Authorization;
+import eu.doniec.piotr.naspotkanie.web.dao.UserDAO;
 
 public class AuthFilter implements Filter {
 
@@ -31,8 +33,12 @@ public class AuthFilter implements Filter {
 		
 		final String[] credentials = Authorization.parseAuthHeader(req.getHeader( "Authorization" ));
 		
-		if( credentials != null ) {
-			if( credentials.length == 2 && credentials[0].equals("admin") && credentials[1].equals("mypass")) {
+		if( credentials != null && credentials.length == 2 ) {
+			
+			UserDAO dao = new UserDAO();
+			User u = dao.getUser(credentials[0]);
+			
+			if( credentials[1].equals(u.getPasswordHash())) {
 				chain.doFilter(request, response);
 				System.out.println("[INFO] Authorizaion successful");
 				return;

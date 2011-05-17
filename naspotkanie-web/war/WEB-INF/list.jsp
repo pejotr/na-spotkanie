@@ -11,7 +11,7 @@
 <body>
 
 <table>
-<tr><th>Email</th><th>RegisterDate</th></tr>
+<tr><th>Id</th><th>Email</th><th>RegisterDate</th><th>Lat</th><th>Lgt</th></tr>
 <%
 	List<User> usersList = (List<User>)request.getAttribute("users_list");
 	if( usersList == null ) {
@@ -24,7 +24,7 @@
 	for (User u : usersList) {
 %>
 
-<tr><td><%= u.getEmail() %></td><td><%= u.getPasswordHash() %></td></tr>
+<tr><td><%= u.getId() %></td><td><%= u.getEmail() %></td><td><%= u.getPasswordHash() %></td><td><%= u.getLatitude() %></td><td><%= u.getLongitude() %></td></tr>
 
 <%
 	}

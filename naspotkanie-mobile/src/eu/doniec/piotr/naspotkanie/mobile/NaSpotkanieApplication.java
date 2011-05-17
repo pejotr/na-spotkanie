@@ -1,12 +1,12 @@
 package eu.doniec.piotr.naspotkanie.mobile;
 
-import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import eu.doniec.piotr.naspotkanie.mobile.util.HttpAuthorizedRequest;
+import greendroid.app.GDApplication;
 
-public class NaSpotkanieApplication extends Application {
+public class NaSpotkanieApplication extends GDApplication {
 	
 	public static final String APPTAG = "NaSpotkanie";
 	public static final String PREFS  = "NaSpotkaniePrefs";
