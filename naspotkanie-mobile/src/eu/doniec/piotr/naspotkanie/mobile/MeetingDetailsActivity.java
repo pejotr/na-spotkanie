@@ -176,13 +176,15 @@ public class MeetingDetailsActivity extends GDActivity {
 			int validCol = crs.getColumnIndex("valid");		
 			Time startTimestamp = new Time();
 			Time stopTimestamp = new Time();
+			final Time t = new Time();			
 			int isValid = 0;
 			
 			isValid = crs.getInt(validCol);
 			startTimestamp.set(crs.getLong(startCol) * 1000);
 			stopTimestamp.set(crs.getLong(stopCol) * 1000);
+			t.setToNow();
 			
-			if( isValid == 0) {
+			if( isValid == 0 || t.toMillis(true) > stopTimestamp.toMillis(true)) {
 				resetTime();
 			} else {
 				mFromDay	 = startTimestamp.monthDay;

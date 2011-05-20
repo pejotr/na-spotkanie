@@ -26,6 +26,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</servlet-mapping>
 	
 	<servlet>
+		<servlet-name>SetLog</servlet-name>
+		<servlet-class>eu.doniec.piotr.naspotkanie.web.SharingSetServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>SetLog</servlet-name>
+		<url-pattern>/SetLog</url-pattern>
+	</servlet-mapping>
+	
+	<servlet>
 		<servlet-name>AuthRegister</servlet-name>
 		<servlet-class>eu.doniec.piotr.naspotkanie.web.AuthRegisterServlet</servlet-class>
 	</servlet>

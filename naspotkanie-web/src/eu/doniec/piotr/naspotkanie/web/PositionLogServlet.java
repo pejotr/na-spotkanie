@@ -24,16 +24,7 @@ public class PositionLogServlet extends HttpServlet {
 			// No-arg constructor
 		}
 	}
-	
-	static class EnaDisSharing {
-		private int action;
-		String[] emails;
 		
-		EnaDisSharing() {
-			// No-arg constructor
-		}
-	}
-	
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) 
 			throws IOException {

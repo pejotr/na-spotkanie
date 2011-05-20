@@ -82,7 +82,7 @@ public class HttpAuthorizedRequest {
 		this.mPassword = mPassword;
 	}
 
-	public HttpEntity makeRequest(HttpPost httppost) 
+	synchronized public HttpEntity makeRequest(HttpPost httppost) 
 			throws ClientProtocolException, IOException, HttpException {
 		HttpResponse resp = mHttpClient.execute(mTargetHost, httppost, mContext);
 		
