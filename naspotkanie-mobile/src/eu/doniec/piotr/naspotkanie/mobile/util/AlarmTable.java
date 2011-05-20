@@ -63,6 +63,13 @@ public class AlarmTable {
 		return c;
 	}
 	
+	public Cursor getValid() {
+		String[] columns = new String[] { "id", "start", "stop" };
+		
+		Cursor c = mDBHelper.getReadableDatabase().query(ALARMS_TABLE_NAME, columns, "valid = 1", null, null, null, null);
+		return c;
+	}
+	
 	public Cursor getById(int id) {
 		String[] columns = new String[] { "id", "start", "stop", "valid" };
 		

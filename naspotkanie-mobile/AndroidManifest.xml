@@ -31,6 +31,7 @@
 		<activity android:name=".MeetingsListActivity" 	 />
 		<activity android:name=".MeetingDetailsActivity" />
 		<activity android:name=".MeetingMapActivity" 	 />
-		<service android:name="eu.doniec.piotr.naspotkanie.mobile.service.TrackingService" />
+		<!--  <service android:name="eu.doniec.piotr.naspotkanie.mobile.service.TrackingService" /> -->
+		<service android:name="eu.doniec.piotr.naspotkanie.mobile.service.TrackingManager" />
     </application>
 </manifest>

@@ -241,11 +241,12 @@ public class MeetingDetailsActivity extends GDActivity {
 	            tbl.update(mEventId, fromTimestamp, toTimestamp, (mAllowLogging.isChecked()) ? 1 : 0);
 	            tbl.close();
 	    		
+	            /*
 	    		Intent i = new Intent(MeetingDetailsActivity.this, TrackingService.class);
 	    		PendingIntent pi = PendingIntent.getService(MeetingDetailsActivity.this, 0, i, 0);
 	    		AlarmManager manager = (AlarmManager)getSystemService(ALARM_SERVICE);       
-	            
 	            manager.set(AlarmManager.RTC, fromTimestamp*1000, pi);
+	            */
 	            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
 	            break;
 	
