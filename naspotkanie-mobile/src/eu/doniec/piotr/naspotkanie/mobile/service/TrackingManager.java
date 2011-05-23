@@ -1,5 +1,11 @@
 package eu.doniec.piotr.naspotkanie.mobile.service;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+
+import org.apache.http.HttpException;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 
@@ -21,7 +27,9 @@ import com.google.gson.Gson;
 
 import eu.doniec.piotr.naspotkanie.mobile.NaSpotkanieApplication;
 import eu.doniec.piotr.naspotkanie.mobile.util.AlarmTable;
+import eu.doniec.piotr.naspotkanie.mobile.util.Calendar;
 import eu.doniec.piotr.naspotkanie.mobile.util.HttpAuthorizedRequest;
+import eu.doniec.piotr.naspotkanie.mobile.util.Calendar.Attendee;
 
 public class TrackingManager extends IntentService implements LocationListener {
 
@@ -33,6 +41,8 @@ public class TrackingManager extends IntentService implements LocationListener {
 	protected int	  mRunningEvents;
 	protected boolean mIsTrackingServiceRunning;
 	protected LocationManager mLocationManager;
+	
+	protected ArrayList<Integer> mSharingPositionEventsIds;
 	
 	public TrackingManager() {
 		super("TrackingManager");
@@ -64,25 +74,59 @@ public class TrackingManager extends IntentService implements LocationListener {
 		Time stopTimestamp  = new Time();
 		
 		if (c != null && c.getCount() > 0 && c.moveToFirst()) {
+			int idCol 	 = c.getColumnIndex("id");
 			int startCol = c.getColumnIndex("start");
 			int stopCol  = c.getColumnIndex("stop");
 			
 			long currentTime = System.currentTimeMillis();
+			ArrayList<Integer> sharingPosEventsIds = new ArrayList<Integer>();
 			
 			do {
+				Integer eventId = new Integer(c.getInt(idCol));
 				startTimestamp.set(c.getLong(startCol) * 1000);
 				stopTimestamp.set(c.getLong(stopCol) * 1000);
 				
 				if( startTimestamp.toMillis(true) < currentTime && stopTimestamp.toMillis(true) > currentTime  ) {
 					Log.i(NaSpotkanieApplication.APPTAG, "TrackingManager: Location sharing trigger event [#startTime<" + startTimestamp.format("%d/%m/%Y %H:%M:%S") +"> " + 
 							"#stopTime<" + stopTimestamp.format("%d/%m/%Y %H:%M:%S") + ">]");
+					
+					if( mSharingPositionEventsIds != null && mSharingPositionEventsIds.contains(eventId)) {
+						mSharingPositionEventsIds.remove(eventId);
+						sharingPosEventsIds.add(eventId);
+					} else {
+						Log.i(NaSpotkanieApplication.APPTAG, "TrackingManager: Adding new sharing relation");
+						
+						ArrayList<Attendee> attendees = Calendar.Attendee.getAll(getContentResolver(), eventId.intValue());
+						ArrayList<String> emails = new ArrayList<String>();
+						EnaDisSharingMessage m = new EnaDisSharingMessage();
+						
+						for(Attendee a : attendees) {
+							emails.add(a.getAttendeeEmail());
+						}
+						
+						String[] str = new String[emails.size()];
+						emails.toArray(str);
+						
+						m.action = 1;
+						m.attendees = str;
+						
+						new SetPositionSharing().execute(m);
+					}
+							
 					mRunningEvents++;
+					
 				}
 				
 			} while(c.moveToNext());
 			
 			c.close();
 			tbl.close();
+			
+			//for(Integer eventId : mSharingPositionEventsIds ) {
+			//	new CancelPositionSharing().execute(new EnaDisSharingMessage());
+			//}
+			
+			mSharingPositionEventsIds = sharingPosEventsIds;
 			
 			Log.i(NaSpotkanieApplication.APPTAG, "TrackingManager: mRunningEvents = " + mRunningEvents);
 			
@@ -170,11 +214,63 @@ public class TrackingManager extends IntentService implements LocationListener {
 		}
 	}
 	
+	class SetPositionSharing extends AsyncTask<EnaDisSharingMessage, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(EnaDisSharingMessage... params) {
+			Gson gson 					= new Gson();
+			HttpPost post 				= new HttpPost("/SetLog");
+			HttpAuthorizedRequest req 	= ((NaSpotkanieApplication)getApplication()).getHttAuthorizedRequest();
+			
+			
+			StringEntity s;
+			try {
+				s = new StringEntity(gson.toJson(params[0]));
+				
+				s.setContentEncoding("application/json");
+				post.setEntity(s);
+				req.makeRequest(post);
+				
+				return Boolean.TRUE;
+			} catch (UnsupportedEncodingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (HttpException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+		
+	}
+	
+	class CancelPositionSharing extends AsyncTask<EnaDisSharingMessage, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(EnaDisSharingMessage... params) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	}
+	
 	class StorePosition {
 		double lgt;
 		double lat;
 		String username;
 		long   id;
 	}
-
+	
+	class EnaDisSharingMessage {
+		int action;
+		String username;
+		String[] attendees;
+	}
 }
