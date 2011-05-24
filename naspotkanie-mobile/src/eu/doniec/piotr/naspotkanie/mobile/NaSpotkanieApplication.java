@@ -1,12 +1,12 @@
 package eu.doniec.piotr.naspotkanie.mobile;
 
-import eu.doniec.piotr.naspotkanie.mobile.MeetingDetailsActivity.AttendeesPositionReqMessage;
 import eu.doniec.piotr.naspotkanie.mobile.util.Calendar;
 import eu.doniec.piotr.naspotkanie.mobile.util.Calendar.Attendee;
 import eu.doniec.piotr.naspotkanie.mobile.util.HttpAuthorizedRequest;
 import greendroid.app.GDApplication;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
@@ -19,7 +19,7 @@ public class NaSpotkanieApplication extends GDApplication {
 	public static final String PREFS  = "NaSpotkaniePrefs";
 	
 	protected HttpAuthorizedRequest mHttpAuthorizedRequest;
-	Map<String, Calendar.Attendee> mAttendeesPositions;
+	Map<String, Calendar.Attendee> mAttendeesPositions = new HashMap<String, Calendar.Attendee>();
 	
 
 	public void setHttpAuthorizedRequest(HttpAuthorizedRequest har) {

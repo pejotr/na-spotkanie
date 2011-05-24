@@ -1,24 +1,19 @@
 package eu.doniec.piotr.naspotkanie.mobile;
 
-import eu.doniec.piotr.naspotkanie.mobile.AuthActivity.AuthRegisterResponse;
 import eu.doniec.piotr.naspotkanie.mobile.util.AlarmTable;
 import eu.doniec.piotr.naspotkanie.mobile.util.Calendar;
-import eu.doniec.piotr.naspotkanie.mobile.util.HttpAuthorizedRequest;
 import eu.doniec.piotr.naspotkanie.mobile.util.Calendar.Attendee;
+import eu.doniec.piotr.naspotkanie.mobile.util.HttpAuthorizedRequest;
 import greendroid.app.GDActivity;
 import greendroid.widget.ActionBarItem;
 import greendroid.widget.ActionBarItem.Type;
 import greendroid.widget.LoaderActionBarItem;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpException;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 
@@ -422,13 +417,13 @@ public class MeetingDetailsActivity extends GDActivity {
 				String json = reader.readLine();
 				AttendeesPositionRespMessage arr = gson.fromJson(json, AttendeesPositionRespMessage.class);
 				
-				Log.d(NaSpotkanieApplication.APPTAG, "JSON read from server:" + json);				
+				Log.d(NaSpotkanieApplication.APPTAG, "JSON read from server:" + json + " " + arr.getLat()[0]);				
 				
 				for(int i = 0; i < arr.getEmails().length; i++) {
 					String email = arr.getEmails()[i];
 					Attendee a = app.mAttendeesPositions.get(email);
 					a.setLattitude(arr.getLat()[i]);
-					a.setLattitude(arr.getLgt()[i]);
+					a.setLongitude(arr.getLgt()[i]);
 					app.mAttendeesPositions.put(email, a);
 				}
 				
