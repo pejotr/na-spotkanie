@@ -124,7 +124,15 @@ public class Calendar {
 		
 		public String attendeeName;
 		public String attendeeEmail;
-			
+		
+		public double longitude;
+		public double lattitude;
+		
+		public Attendee() {
+			this.lattitude = 0.0;
+			this.longitude = 0.0;
+		}
+		
 		public String getAttendeeName() {
 			return attendeeName;
 		}
@@ -141,6 +149,22 @@ public class Calendar {
 			this.attendeeEmail = attendeeEmail;
 		}
 	
+		public double getLattitude() {
+			return this.lattitude;
+		}
+		
+		public void setLattitude(double lattitude) {
+			this.lattitude = lattitude;
+		}
+		
+		public double getLongitude() {
+			return this.longitude;
+		}
+		
+		public void setLongitude(double longitude) {
+			this.longitude = longitude;
+		}
+		
 		public static ArrayList<Attendee> getAll(ContentResolver resolver,  int eventId) {
 			
 			ArrayList<Attendee> attendees = new ArrayList<Attendee>();
@@ -155,13 +179,11 @@ public class Calendar {
 				int emailCol = cursor.getColumnIndex("attendeeEmail");
 				
 				do {
-					
 					Calendar.Attendee a = new Calendar.Attendee();
 					
 					a.setAttendeeName(cursor.getString(nameCol));
 					a.setAttendeeEmail(cursor.getString(emailCol));
 					attendees.add(a);
-					
 				} while(cursor.moveToNext());
 			}
 			

@@ -17,6 +17,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	 -->
 
 	<servlet>
+		<servlet-name>PositionRequest</servlet-name>
+		<servlet-class>eu.doniec.piotr.naspotkanie.web.PositionRequest</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>PositionRequest</servlet-name>
+		<url-pattern>/PosReq</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
 		<servlet-name>PositionLog</servlet-name>
 		<servlet-class>eu.doniec.piotr.naspotkanie.web.PositionLogServlet</servlet-class>
 	</servlet>
@@ -50,6 +59,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	<servlet-mapping>
 		<servlet-name>DbgList</servlet-name>
 		<url-pattern>/DbgList</url-pattern>
+	</servlet-mapping>
+
+	<servlet>
+		<servlet-name>DbgShares</servlet-name>
+		<jsp-file>/WEB-INF/shares.jsp</jsp-file>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>DbgShares</servlet-name>
+		<url-pattern>/DbgShares</url-pattern>
 	</servlet-mapping>
 
 	<servlet>

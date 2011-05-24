@@ -1,10 +1,12 @@
 package eu.doniec.piotr.naspotkanie.web.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import eu.doniec.piotr.naspotkanie.entity.Share;
 import eu.doniec.piotr.naspotkanie.entity.User;
 
 
@@ -69,8 +71,50 @@ public class UserDAO {
 		List<User> users = q.getResultList();
 		
 		System.out.println("[INFO] There are " + Integer.toString(users.size()) + " users registered");
-		
 		return users;
+	}
+	
+	public List<User> getUsersOnList(String[] users) {
+		EntityManager em = EMFService.get().createEntityManager();
+		StringBuilder userSet = new StringBuilder();
+		
+		for(String u : users) {
+			userSet.append("'").append(u).append("'").append(",");
+		}
+		
+		System.out.println("[DEBUG] UserDAO > " + userSet );
+		String userSetQuery = userSet.substring(0, userSet.length() - 1);
+		System.out.println("[DEBUG] UserDAO > SQL query " + "select from User u WHERE u.email IN (" + userSetQuery + ")" );
+		
+		Query q = em.createQuery("SELECT FROM User u WHERE u.email IN (" + userSetQuery + ")");
+		List<User> usersList = q.getResultList();
+		
+		System.out.println("[DEBUG] UserDAO > Cosik :) ");
+		return usersList;
+	}
+	
+	public List<User> getUsersOnList(List<Share> shares) {
+		
+		if(shares.size() == 0) {
+			return new ArrayList<User>();
+		}
+		
+		EntityManager em = EMFService.get().createEntityManager();
+		StringBuilder userSet = new StringBuilder();
+		
+		for(Share s : shares) {
+			userSet.append(s.getId1()).append(",");
+		}
+		
+		System.out.println("[DEBUG] UserDAO::getUsersOnList > " + userSet );
+		String userSetQuery = userSet.substring(0, userSet.length() - 1);
+		System.out.println("[DEBUG] UserDAO::getUsersOnList > SQL query " + "select from User u WHERE u.id IN (" + userSetQuery + ")" );
+		
+		Query q = em.createQuery("SELECT FROM User u WHERE u.id IN (" + userSetQuery + ")");
+		List<User> usersList = q.getResultList();
+		
+		System.out.println("[DEBUG] UserDAO::getUsersOnList > Cosik :) ");
+		return usersList;
 	}
 	
 }

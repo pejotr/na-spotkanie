@@ -1,10 +1,17 @@
 package eu.doniec.piotr.naspotkanie.mobile;
 
+import eu.doniec.piotr.naspotkanie.mobile.MeetingDetailsActivity.AttendeesPositionReqMessage;
+import eu.doniec.piotr.naspotkanie.mobile.util.Calendar;
+import eu.doniec.piotr.naspotkanie.mobile.util.Calendar.Attendee;
+import eu.doniec.piotr.naspotkanie.mobile.util.HttpAuthorizedRequest;
+import greendroid.app.GDApplication;
+
+import java.util.ArrayList;
+import java.util.Map;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import eu.doniec.piotr.naspotkanie.mobile.util.HttpAuthorizedRequest;
-import greendroid.app.GDApplication;
 
 public class NaSpotkanieApplication extends GDApplication {
 	
@@ -12,6 +19,7 @@ public class NaSpotkanieApplication extends GDApplication {
 	public static final String PREFS  = "NaSpotkaniePrefs";
 	
 	protected HttpAuthorizedRequest mHttpAuthorizedRequest;
+	Map<String, Calendar.Attendee> mAttendeesPositions;
 	
 
 	public void setHttpAuthorizedRequest(HttpAuthorizedRequest har) {
@@ -31,6 +39,24 @@ public class NaSpotkanieApplication extends GDApplication {
 	    }
 	    return false;
 
+	}
+	
+	public void updateAttendeesMap(ArrayList<Attendee> attendees) {
+		
+		for(Attendee a : attendees) {
+			
+			if(mAttendeesPositions.containsKey(a.getAttendeeEmail())) {
+				
+				if(a.getLattitude() == 0.0 || a.getLongitude() == 0.0) {
+					continue;	
+				}
+				
+			} 
+			
+			mAttendeesPositions.put(a.getAttendeeEmail(), a);
+			
+		}
+		
 	}
 	
 }
