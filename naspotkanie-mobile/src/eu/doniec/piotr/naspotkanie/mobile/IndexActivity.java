@@ -17,7 +17,7 @@ public class IndexActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		((NaSpotkanieApplication) this.getApplication()).setHttpAuthorizedRequest(
-				new HttpAuthorizedRequest(new HttpHost("192.168.10.153", 8888), "test", "test"));
+				new HttpAuthorizedRequest(new HttpHost(Const.HOST_NAME, Const.HOST_PORT), "none", "none"));
 		
 		SharedPreferences settings = getSharedPreferences(NaSpotkanieApplication.PREFS, Context.MODE_PRIVATE);
 		String username = settings.getString("username", "");
@@ -32,7 +32,7 @@ public class IndexActivity extends Activity {
 		} else {
 			Log.i(NaSpotkanieApplication.APPTAG, 
 					"Read credentials [#username=" + username + ";#password[" + password +"]]");
-			startActivity(new Intent(this, eu.doniec.piotr.naspotkanie.mobile.MainActivity.class) );
+			startActivity(new Intent(this, eu.doniec.piotr.naspotkanie.mobile.MeetingsListActivity.class) );
 		}
 	}	
 }

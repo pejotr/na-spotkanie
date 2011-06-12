@@ -93,7 +93,7 @@ public class UserDAO {
 		return usersList;
 	}
 	
-	public List<User> getUsersOnList(List<Share> shares) {
+	public List<User> getUsersOnList(Long ownerId, List<Share> shares) {
 		
 		if(shares.size() == 0) {
 			return new ArrayList<User>();
@@ -106,11 +106,13 @@ public class UserDAO {
 			userSet.append(s.getId1()).append(",");
 		}
 		
-		System.out.println("[DEBUG] UserDAO::getUsersOnList > " + userSet );
-		String userSetQuery = userSet.substring(0, userSet.length() - 1);
-		System.out.println("[DEBUG] UserDAO::getUsersOnList > SQL query " + "select from User u WHERE u.id IN (" + userSetQuery + ")" );
+		userSet.append(ownerId);
 		
-		Query q = em.createQuery("SELECT FROM User u WHERE u.id IN (" + userSetQuery + ")");
+		//System.out.println("[DEBUG] UserDAO::getUsersOnList > " + userSet );
+		//String userSetQuery = userSet.substring(0, userSet.length());
+		System.out.println("[DEBUG] UserDAO::getUsersOnList > SQL query " + "select from User u WHERE u.id IN (" + userSet + ")" );
+		
+		Query q = em.createQuery("SELECT FROM User u WHERE u.id IN (" + userSet + ")");
 		List<User> usersList = q.getResultList();
 		
 		System.out.println("[DEBUG] UserDAO::getUsersOnList > Cosik :) ");

@@ -44,22 +44,32 @@ public class ShareDAO {
 	
 	public boolean addShares(User owner, List<User> users) {
 		
-		if( users.size() == 0 ) {
+		if( users.isEmpty() ) {
 			System.out.println("[DEBUG] ShareDAO > Users list is empty");
 			return false;
 		}
 		
 		synchronized (this) {
-			EntityManager em = EMFService.get().createEntityManager();
 			
 			for( User u : users ) {
-				Share s = new Share();
-				s.setId1(owner.getId());
-				s.setId2(u.getId());
-				em.persist(s);
+				
+				if(owner.getId() != u.getId()) {
+					EntityManager em = EMFService.get().createEntityManager();
+					Share s1 = new Share();
+					s1.setId1(owner.getId());
+					s1.setId2(u.getId());				
+					em.persist(s1);
+					em.close();
+					
+					em = EMFService.get().createEntityManager();
+					Share s2 = new Share();
+					s2.setId1(u.getId());
+					s2.setId2(owner.getId() );
+					em.persist(s2);
+					em.close();
+				}
 			}
-			
-			em.close();
+
 		}
 		
 		System.out.println("[DEBUG] ShareDAO > Shares inserted, I hope");		

@@ -63,7 +63,7 @@ public class PositionRequest extends HttpServlet  {
 		ShareDAO sdao = new ShareDAO();
 		User owner = udao.getUser(posreq.email);
 		List<Share> shares = sdao.getUserFriendShares(owner.getId());
-		List<User> users  = udao.getUsersOnList(shares);
+		List<User> users  = udao.getUsersOnList(owner.getId(), shares);
 		
 		AttendeesPositionRespMessage respmsg = new AttendeesPositionRespMessage();
 		respmsg.emails = new String[users.size()];

@@ -47,7 +47,7 @@ public class AuthActivity extends Activity {
 				String password = ((EditText)AuthActivity.this.findViewById(R.id.etPassword)).getText().toString();
 
 				((NaSpotkanieApplication) AuthActivity.this.getApplication()).setHttpAuthorizedRequest(
-						new HttpAuthorizedRequest(new HttpHost("192.168.10.153", 8888), username, password));
+						new HttpAuthorizedRequest(new HttpHost(Const.HOST_NAME, Const.HOST_PORT), username, password));
 				
 				Log.i(NaSpotkanieApplication.APPTAG, 
 						"Starting auth task [#username=" + username + ";#password[" + password +"]]");
@@ -86,10 +86,13 @@ public class AuthActivity extends Activity {
 			boolean isOnline = ((NaSpotkanieApplication)mContext.getApplication()).isOnline(); 
 
 			AuthRegisterResponse arrError = new AuthRegisterResponse();
-			arrError.statusCode = 404;
+			arrError.statusCode = 904;
 			
 			if( !isOnline ) {
+				Log.i(NaSpotkanieApplication.APPTAG, "Please turn on WIFI");
 				return arrError;
+			} else {
+				arrError.statusCode = 404;	
 			}
 			
 			HttpAuthorizedRequest req = ((NaSpotkanieApplication)mContext.getApplication()).getHttAuthorizedRequest();
@@ -109,13 +112,10 @@ public class AuthActivity extends Activity {
 						" #statusMessage=" + arr.statusMessage + "]");
 				return arr;
 				
-			} catch (ClientProtocolException e) {
+			} catch (Exception e) {
+				Log.e(NaSpotkanieApplication.APPTAG, "Somethig gone wrong " + e.getMessage());
 				return arrError;
-			} catch (IOException e) {
-				return arrError;
-			} catch (HttpException e) {
-				return arrError;
-			}
+			} 
 		}
 		
 		@Override
@@ -123,10 +123,14 @@ public class AuthActivity extends Activity {
 			mAuthProgess.dismiss();
 			
 			switch(response.statusCode) {
-			
+				case 904:
+					Toast.makeText(AuthActivity.this.getApplicationContext(), 
+							"Cannot connect to network - please turn on WiFi", Toast.LENGTH_LONG).show();
+					break;			
+					
 				case HttpAuthorizedRequest.HTTP_NOTFOUND:
 					Toast.makeText(AuthActivity.this.getApplicationContext(), 
-							"Cannot connect to server - please turn on network", Toast.LENGTH_LONG).show();
+							"Host not found", Toast.LENGTH_LONG).show();
 					break;
 			
 				case HttpAuthorizedRequest.HTTP_OK:
@@ -145,7 +149,7 @@ public class AuthActivity extends Activity {
 							"Storing credentials [#username<" + req.getUsername() + "> #password<" + req.getPassword() +"> #id<" + response.userId + ">]");
 					editor.commit();
 					
-					startActivity(new Intent(mContext, eu.doniec.piotr.naspotkanie.mobile.MainActivity.class) );
+					startActivity(new Intent(mContext, eu.doniec.piotr.naspotkanie.mobile.MeetingsListActivity.class) );
 					break;
 					
 				default:
