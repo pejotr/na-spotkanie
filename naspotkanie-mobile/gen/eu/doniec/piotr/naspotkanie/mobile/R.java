@@ -794,7 +794,8 @@ containing a value of this type.
         public static final int TextAppearance_TabIndicator=0x7f090005;
         public static final int Theme_GreenDroid=0x7f090033;
         public static final int Theme_GreenDroid_NoTitleBar=0x7f090034;
-        public static final int Theme_NaSpotkanie=0x7f090035;
+        public static final int Theme_NaSpotkanie=0x7f090036;
+        public static final int text_black=0x7f090035;
     }
     public static final class styleable {
         /**  ActionBar related attributes 
