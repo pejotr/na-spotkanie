@@ -258,7 +258,7 @@ public class MeetingDetailsActivity extends GDActivity {
 	            	setupSharing(mEventId);
 	            }
 	                   
-	            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+	            Toast.makeText(this, "Sharing  preferences saved", Toast.LENGTH_SHORT).show();
 	            break;
 	
 	        default:
